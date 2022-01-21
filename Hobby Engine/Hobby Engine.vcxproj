@@ -145,10 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="components.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="variables.h" />
-    <ClInclude Include="vertex-utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

@@ -21,10 +21,7 @@
     <ClInclude Include="shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vertex-utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="components.h">
+    <ClInclude Include="mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

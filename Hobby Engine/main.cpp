@@ -6,7 +6,7 @@
 
 #include "shaders.h"
 #include "variables.h"
-#include "vertex-utils.h"
+#include "mesh.h"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
@@ -68,6 +68,8 @@ int main()
 
     indexVertex vertex;
     bindIndexMesh(vertex, vertices, sizeof(vertices), indices, sizeof(indices));
+    
+    mesh square(vertex, vertices, sizeof(vertices), indices, sizeof(indices));
 
     while (!glfwWindowShouldClose(window))
     {
