@@ -66,10 +66,9 @@ int main()
         0,2,3
     };
 
-    indexVertex vertex;
-    bindIndexMesh(vertex, vertices, sizeof(vertices), indices, sizeof(indices));
-    
+    indexVertex vertex; 
     mesh square(vertex, vertices, sizeof(vertices), indices, sizeof(indices));
+    bindIndexMesh(square);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -78,29 +77,25 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        for (int i = 0; i < sizeof(vertices) / sizeof(float); i++) {
-            vertices[i] += 0.01f;
-        }
-
+        moveMesh(square, vector(0.01f, 0.01f));
+        
         int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
         glUseProgram(shaderProgram);
         glUniform4f(vertexColorLocation, 0.1f, 0.1f, 0.1f, 1.0f);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vertex.buffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
-
-        glBindVertexArray(vertex.array);
+         
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         glBindVertexArray(0);
 
         glfwSwapBuffers(window);
     }
-    glDeleteVertexArrays(1, &vertex.array);
-    glDeleteBuffers(1, &vertex.buffer);
-    glDeleteBuffers(1, &vertex.index);
+    glDeleteVertexArrays(1, &square.vertex.array);
+    glDeleteBuffers(1, &square.vertex.buffer);
+    glDeleteBuffers(1, &square.vertex.index);
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    
+    square.freeArrays();
 
     glfwTerminate();
     return 0;

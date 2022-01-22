@@ -30,17 +30,28 @@ public:
 	int verticesSize;
 	int indexesSize;
 
-	mesh(indexVertex meshVertex, float meshVertices[], int meshVerticesSize, unsigned int meshIndexes[], int meshIndexesSize) {
-		vertex = vertex;
-		vertices = (float*)calloc(sizeof(meshVertices) / sizeof(float), sizeof(float));
-		indexes = (unsigned int*)calloc(sizeof(meshIndexes) / sizeof(unsigned int), sizeof(unsigned int));
-		verticesSize = meshVerticesSize;
-		indexesSize = meshIndexesSize;
-	}
-	~mesh() {
+	void freeArrays() {
 		free(vertices);
 		free(indexes);
 	}
+
+	mesh(indexVertex meshVertex, float meshVertices[], int meshVerticesSize, unsigned int meshIndexes[], int meshIndexesSize) {
+		vertex = vertex;
+		vertices = (float*)malloc(meshVerticesSize);
+		indexes = (unsigned int*)malloc(meshIndexesSize);
+		verticesSize = meshVerticesSize / sizeof(float);
+		indexesSize = meshIndexesSize / sizeof(unsigned int);
+		
+		for (int i = 0; i < verticesSize; i++) {
+			vertices[i] = meshVertices[i];
+		}
+		for (int i = 0; i < indexesSize; i++) {
+			indexes[i] = meshIndexes[i];
+		}
+	}
+	~mesh() {
+	}
+
 };
 
 void bindIndexMesh(mesh mesh) {
@@ -48,13 +59,13 @@ void bindIndexMesh(mesh mesh) {
     glBindVertexArray(mesh.vertex.array);
 
     glBindBuffer(GL_ARRAY_BUFFER, mesh.vertex.buffer);
-    glBufferData(GL_ARRAY_BUFFER, mesh.verticesSize, &mesh.vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, mesh.verticesSize * sizeof(float), &mesh.vertices[0], GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.vertex.index);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indexesSize, &mesh.indexes[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indexesSize * sizeof(unsigned int), &mesh.indexes[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -66,9 +77,9 @@ void moveMesh(mesh mesh, vector move) {
 		mesh.vertices[i * 2] += move.x;
 		mesh.vertices[i * 2 + 1] += move.y;
 	}
+
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vertex.buffer);
-	glBufferData(GL_ARRAY_BUFFER, mesh.verticesSize, &mesh.vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh.verticesSize * sizeof(float), &mesh.vertices[0], GL_STATIC_DRAW);
 
 	glBindVertexArray(mesh.vertex.array);
-
 }
