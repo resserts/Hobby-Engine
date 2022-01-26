@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
 
+#include "vector.h"
+
 class indexVertex {
 public:
     unsigned int array, buffer, index;
@@ -12,18 +14,9 @@ public:
     }
 };
 
-struct vector {
-	float x;
-	float y;
-
-	vector(float X, float Y) {
-		x = X;
-		y = Y;
-	}
-};
-
 struct mesh {
 public:
+	vector position;
 	indexVertex vertex;
 	float* vertices;
 	unsigned int* indexes;
@@ -35,18 +28,23 @@ public:
 		free(indexes);
 	}
 
-	mesh(indexVertex meshVertex, float meshVertices[], int meshVerticesSize, unsigned int meshIndexes[], int meshIndexesSize) {
+	mesh( float meshVertices[], int meshVerticesSize, unsigned int meshIndexes[], int meshIndexesSize) {
 		vertex = vertex;
 		vertices = (float*)malloc(meshVerticesSize);
 		indexes = (unsigned int*)malloc(meshIndexesSize);
 		verticesSize = meshVerticesSize / sizeof(float);
 		indexesSize = meshIndexesSize / sizeof(unsigned int);
 		
-		for (int i = 0; i < verticesSize; i++) {
-			vertices[i] = meshVertices[i];
+		if (vertices != NULL && indexes != NULL) {
+			for (int i = 0; i < verticesSize; i++) {
+				vertices[i] = meshVertices[i];
+			}
+			for (int i = 0; i < indexesSize; i++) {
+				indexes[i] = meshIndexes[i];
+			}
 		}
-		for (int i = 0; i < indexesSize; i++) {
-			indexes[i] = meshIndexes[i];
+		else {
+			printf("invalid pointer");
 		}
 	}
 	~mesh() {
@@ -77,6 +75,8 @@ void moveMesh(mesh mesh, vector move) {
 		mesh.vertices[i * 2] += move.x;
 		mesh.vertices[i * 2 + 1] += move.y;
 	}
+	mesh.position.x += move.x;
+	mesh.position.y += move.y;
 
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vertex.buffer);
 	glBufferData(GL_ARRAY_BUFFER, mesh.verticesSize * sizeof(float), &mesh.vertices[0], GL_STATIC_DRAW);

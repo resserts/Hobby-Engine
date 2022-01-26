@@ -7,6 +7,7 @@
 #include "shaders.h"
 #include "variables.h"
 #include "mesh.h"
+#include "rb-collider.h"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
@@ -65,10 +66,10 @@ int main()
         0,1,2,
         0,2,3
     };
-
-    indexVertex vertex; 
-    mesh square(vertex, vertices, sizeof(vertices), indices, sizeof(indices));
+ 
+    mesh square( vertices, sizeof(vertices), indices, sizeof(indices));
     bindIndexMesh(square);
+    rigidBody rb;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -77,7 +78,29 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        moveMesh(square, vector(0.01f, 0.01f));
+        float forceX = 0;
+        int stateD = glfwGetKey(window, GLFW_KEY_D);
+        if (stateD == GLFW_PRESS)
+        {
+            forceX = 0.005f;
+        }
+        int stateA = glfwGetKey(window, GLFW_KEY_A);
+        if (stateA == GLFW_PRESS)
+        {
+            forceX = -0.005f;
+        }
+
+        float forceY = 0;
+        float gravity = -0.01f;
+        int stateW = glfwGetKey(window, GLFW_KEY_W);
+        if (stateW == GLFW_PRESS)
+        {
+            forceY = 0.05f;
+        }
+        
+        rb.velocity.x += forceX;
+        rb.velocity.y += forceY + gravity;
+        moveMesh(square, rb.velocity);
         
         int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
         glUseProgram(shaderProgram);
