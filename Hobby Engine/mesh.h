@@ -28,8 +28,7 @@ public:
 		free(indexes);
 	}
 
-	mesh( float meshVertices[], int meshVerticesSize, unsigned int meshIndexes[], int meshIndexesSize) {
-		vertex = vertex;
+	mesh(float meshVertices[], int meshVerticesSize, unsigned int meshIndexes[], int meshIndexesSize) {
 		vertices = (float*)malloc(meshVerticesSize);
 		indexes = (unsigned int*)malloc(meshIndexesSize);
 		verticesSize = meshVerticesSize / sizeof(float);
@@ -64,7 +63,7 @@ void bindIndexMesh(mesh mesh) {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.vertex.index);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indexesSize * sizeof(unsigned int), &mesh.indexes[0], GL_STATIC_DRAW);
-
+	
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
@@ -77,9 +76,4 @@ void moveMesh(mesh mesh, vector move) {
 	}
 	mesh.position.x += move.x;
 	mesh.position.y += move.y;
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vertex.buffer);
-	glBufferData(GL_ARRAY_BUFFER, mesh.verticesSize * sizeof(float), &mesh.vertices[0], GL_STATIC_DRAW);
-
-	glBindVertexArray(mesh.vertex.array);
 }
