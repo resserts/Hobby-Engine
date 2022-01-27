@@ -55,27 +55,7 @@ int main()
     glUseProgram(shaderProgram);
 
 
-    float vertices[74];
-
-    for (int i = 0; i < 36; i++) {
-        vertices[i * 2] = cos(i * 10 * radians) * hW;
-        vertices[i * 2 + 1] = sin(i * 10 * radians);
-    }
-    vertices[72] = 0;
-    vertices[73] = 0;
-
-    unsigned int indices[108];
-
-    for (int j = 0; j < 35; j++) {
-        indices[j * 3] = j;
-        indices[j * 3 + 1] = j + 1;
-        indices[j * 3 + 2] = 36;
-    }
-    indices[105] = 35;
-	indices[106] = 0;
-	indices[107] = 36;
-    
-    mesh square( vertices, sizeof(vertices), indices, sizeof(indices));
+    mesh square = Circle(72, 5);
     bindIndexMesh(square);
     rigidBody rb;
 
@@ -108,19 +88,13 @@ int main()
         
         rb.velocity.x += forceX;
         rb.velocity.y += forceY + gravity;
-        //moveMesh(square, rb.velocity);
+        moveMesh(square, rb.velocity);
         
         int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
         glUseProgram(shaderProgram);
-        glUniform4f(vertexColorLocation, 0.1f, 0.1f, 0.1f, 1.0f);
+        glUniform4f(vertexColorLocation, 0.8f, 0.1f, 0.5f, 1.0f);
          
-        glBindBuffer(GL_ARRAY_BUFFER, square.vertex.buffer);
-	    glBufferData(GL_ARRAY_BUFFER, square.verticesSize * sizeof(float), &square.vertices[0], GL_STATIC_DRAW);
-
-	    glBindVertexArray(square.vertex.array);
-
-        glDrawElements(GL_TRIANGLES, square.indexesSize, GL_UNSIGNED_INT, nullptr);
-        glBindVertexArray(0);
+        renderMesh(square);
 
         glfwSwapBuffers(window);
     }

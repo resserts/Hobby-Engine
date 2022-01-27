@@ -77,3 +77,45 @@ void moveMesh(mesh mesh, vector move) {
 	mesh.position.x += move.x;
 	mesh.position.y += move.y;
 }
+
+void renderMesh(mesh mesh) {
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vertex.buffer);
+	glBufferData(GL_ARRAY_BUFFER, mesh.verticesSize * sizeof(float), &mesh.vertices[0], GL_STATIC_DRAW);
+
+	glBindVertexArray(mesh.vertex.array);
+
+	glDrawElements(GL_TRIANGLES, mesh.indexesSize, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
+}
+
+auto Circle(int res, float size) {
+	float* vertices;	
+	vertices = (float*)malloc((res + 1) * 2 * sizeof(float));
+
+	float offset = 360 / res;
+	for (int i = 0; i < res; i++) {
+		vertices[i * 2] = cos(i * offset * radians) * (size / 10) * hW;
+		vertices[i * 2 + 1] = sin(i * offset * radians) * (size / 10);
+	}
+	vertices[res * 2] = 0;
+	vertices[res * 2 + 1] = 0;
+
+	unsigned int* indices;
+	indices = (unsigned int*)malloc((res * 3 * sizeof(unsigned int)));
+
+	for (int j = 0; j < res - 1; j++) {
+		indices[j * 3] = j;
+		indices[j * 3 + 1] = j + 1;
+		indices[j * 3 + 2] = res;
+	}
+	indices[res * 3 - 3] = res - 1;
+	indices[res * 3 - 2] = 0;
+	indices[res * 3 - 1] = res;
+
+	mesh circle(vertices, (res + 1) * 2 * sizeof(float), indices, (res * 3 * sizeof(unsigned int)));
+
+	free(vertices);
+	free(indices);
+
+	return circle;
+}
