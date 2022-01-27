@@ -64,9 +64,6 @@ void bindIndexMesh(mesh mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.vertex.index);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indexesSize * sizeof(unsigned int), &mesh.indexes[0], GL_STATIC_DRAW);
 	
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindVertexArray(0);
 }
 
 void moveMesh(mesh mesh, vector move) {
@@ -79,12 +76,11 @@ void moveMesh(mesh mesh, vector move) {
 }
 
 void renderMesh(mesh mesh) {
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vertex.buffer);
-	glBufferData(GL_ARRAY_BUFFER, mesh.verticesSize * sizeof(float), &mesh.vertices[0], GL_STATIC_DRAW);
-
-	glBindVertexArray(mesh.vertex.array);
+	bindIndexMesh(mesh);
 
 	glDrawElements(GL_TRIANGLES, mesh.indexesSize, GL_UNSIGNED_INT, nullptr);
+
+    glBindVertexArray(0);
 	glBindVertexArray(0);
 }
 

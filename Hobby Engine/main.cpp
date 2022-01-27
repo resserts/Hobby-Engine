@@ -56,8 +56,12 @@ int main()
 
 
     mesh square = Circle(72, 5);
+    mesh circle = Circle(36, 3);
     bindIndexMesh(square);
     rigidBody rb;
+    
+    moveMesh(circle, vector(0.3f, 0.1f));
+    moveMesh(square, vector(-0.3f, -0.1f));
 
     while (!glfwWindowShouldClose(window))
     {
@@ -86,15 +90,20 @@ int main()
             forceY = 0.05f;
         }
         
-        rb.velocity.x += forceX;
-        rb.velocity.y += forceY + gravity;
+        rb.velocity.x = forceX;
+        rb.velocity.y = forceY;
         moveMesh(square, rb.velocity);
         
         int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
         glUseProgram(shaderProgram);
-        glUniform4f(vertexColorLocation, 0.8f, 0.1f, 0.5f, 1.0f);
-         
+        glUniform4f(vertexColorLocation, 0.8f, 0.f, 0.5f, 0.5f);
+        
         renderMesh(square);
+        
+        glUseProgram(shaderProgram);
+        glUniform4f(vertexColorLocation, 0.5f, 0.f, 0.8f, 0.5f);
+
+        renderMesh(circle);
 
         glfwSwapBuffers(window);
     }
