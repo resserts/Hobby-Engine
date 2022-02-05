@@ -58,7 +58,7 @@ int main()
     mesh square = Circle(72, 5);
     mesh circle = Circle(36, 3);
 
-    circle = moveMesh(circle, vector(0.7f, 0.4f));
+    circle = moveMesh(circle, vector(0.7f, 0.2f));
     square = moveMesh(square, vector(-0.7f, -0.2f));
     circleCollider circleCol(circle.position, 3);
     circleCollider squareCol(square.position, 5);
@@ -72,7 +72,7 @@ int main()
     {
         glfwPollEvents();
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         /*float forceX = 0;

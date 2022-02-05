@@ -60,7 +60,7 @@ auto collision(rigidBody obj1, rigidBody obj2) {
 	float force = (abs(obj1.velocity.x) + abs(obj1.velocity.y));
 	//printf("%f", yRatio + xRatio);
 
-	vector velocity(force * xRatio, force * yRatio);
+	vector velocity(obj1.velocity.x + (force * xRatio), obj1.velocity.y + (force * yRatio));
 	obj1.velocity = velocity;
 	return obj1;
 }
