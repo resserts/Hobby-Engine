@@ -55,18 +55,18 @@ int main()
     glUseProgram(shaderProgram);
 
 
-    mesh square = Circle(72, 5);
-    mesh circle = Circle(36, 3);
+    mesh square = CircleMesh(36, 2);
+    mesh circle = CircleMesh(36, 1);
 
-    circle = moveMesh(circle, vector(0.7f, 0.2f));
-    square = moveMesh(square, vector(-0.7f, -0.2f));
-    circleCollider circleCol(circle.position, 3);
-    circleCollider squareCol(square.position, 5);
+    circle = moveMesh(circle, vector(0.7f, 0.5f));
+    square = moveMesh(square, vector(-0.7f, -0.1f));
+    circleCollider circleCol(circle.position, 1);
+    circleCollider squareCol(square.position, 2);
     rigidBody circleRb(circle.position);
     rigidBody squareRb(square.position);
     
-    circleRb.velocity = vector(-0.005f, 0);
-    squareRb.velocity = vector(0.005f, 0);
+    circleRb.velocity = vector(-0.01f, 0.01f);
+    squareRb.velocity = vector(0.01f, -0.01f);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -98,12 +98,14 @@ int main()
         rb.velocity.x = forceX;
         rb.velocity.y = forceY;*/
 
-        if (circleColliding(circleCol, squareCol)) {
+        circleInBoxCol(circleCol, &circleRb);
+        circleInBoxCol(squareCol, &squareRb);
+
+        if (circlesColliding(circleCol, squareCol)) {
             
             //printf("%f", squareRb.velocity.x);
-            circleRb = collision(circleRb, squareRb);
-            squareRb = collision(squareRb, circleRb);
-
+            circlesCollision(&circleRb, &squareRb);
+            //printf("%f", circleRb.velocity.x);
         }
         
         circleRb.refresh();

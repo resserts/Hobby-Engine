@@ -85,7 +85,7 @@ void renderMesh(mesh mesh) {
 	glBindVertexArray(0);
 }
 
-auto Circle(int res, float radius) {
+auto CircleMesh(int res, float radius) {
 	float* vertices;	
 	vertices = (float*)malloc((res + 1) * 2 * sizeof(float));
 	
