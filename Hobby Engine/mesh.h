@@ -67,6 +67,7 @@ void bindIndexMesh(mesh mesh) {
 }
 
 auto moveMesh(mesh mesh, vector move) {
+	printf("%d\n", mesh.verticesSize);
     for (int i = 0; i < mesh.verticesSize / 2; i++) {
 		mesh.vertices[i * 2] += move.x;
 		mesh.vertices[i * 2 + 1] += move.y;
@@ -85,45 +86,3 @@ void renderMesh(mesh mesh) {
 	glBindVertexArray(0);
 }
 
-auto CircleMesh(int res, float radius) {
-	float* vertices;	
-	vertices = (float*)malloc((res + 1) * 2 * sizeof(float));
-	
-	if (vertices == NULL) {
-		printf("error allocating memory");
-		return mesh(0,0,0,0);
-	}
-
-	float offset = 360 / res;
-	for (int i = 0; i < res; i++) {
-		vertices[i * 2] = cos(i * offset * radians) * (radius / 10) * hW;
-		vertices[i * 2 + 1] = sin(i * offset * radians) * (radius / 10);
-		//printf("%f \n", (i * offset * radians));
-	}
-	vertices[res * 2] = 0;
-	vertices[res * 2 + 1] = 0;
-
-	unsigned int* indices;
-	indices = (unsigned int*)malloc((res * 3 * sizeof(unsigned int)));
-
-	if (indices == NULL) {
-		printf("error allocating memory");
-		return mesh(0,0,0,0);
-	}
-
-	for (int j = 0; j < res - 1; j++) {
-		indices[j * 3] = j;
-		indices[j * 3 + 1] = j + 1;
-		indices[j * 3 + 2] = res;
-	}
-	indices[res * 3 - 3] = res - 1;
-	indices[res * 3 - 2] = 0;
-	indices[res * 3 - 1] = res;
-
-	mesh circle(vertices, (res + 1) * 2 * sizeof(float), indices, (res * 3 * sizeof(unsigned int)));
-
-	free(vertices);
-	free(indices);
-
-	return circle;
-}

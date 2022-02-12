@@ -8,6 +8,7 @@
 #include "variables.h"
 #include "mesh.h"
 #include "rb-collider.h"
+#include "circle.h"
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
@@ -55,19 +56,9 @@ int main()
     glUseProgram(shaderProgram);
 
 
-    mesh square = CircleMesh(36, 2);
-    mesh circle = CircleMesh(36, 1);
+    circle circle(vector(0.7f, 0.5f), 1, 36, vector(-0.01f, 0.01f));
 
-    circle = moveMesh(circle, vector(0.7f, 0.5f));
-    square = moveMesh(square, vector(-0.7f, -0.1f));
-    circleCollider circleCol(circle.position, 1);
-    circleCollider squareCol(square.position, 2);
-    rigidBody circleRb(circle.position);
-    rigidBody squareRb(square.position);
-    
-    circleRb.velocity = vector(-0.01f, 0.01f);
-    squareRb.velocity = vector(0.01f, -0.01f);
-
+         
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -98,47 +89,35 @@ int main()
         rb.velocity.x = forceX;
         rb.velocity.y = forceY;*/
 
-        circleInBoxCol(circleCol, &circleRb);
-        circleInBoxCol(squareCol, &squareRb);
-
-        if (circlesColliding(circleCol, squareCol)) {
+        circleInBoxCol(*circle.collider, circle.rb);
+        /*
+        if (circlesColliding(*circle.collider, squareCol)) {
             
             //printf("%f", squareRb.velocity.x);
-            circlesCollision(&circleRb, &squareRb);
+            circlesCollision(circle.rb, &squareRb);
             //printf("%f", circleRb.velocity.x);
-        }
+        }*/
         
-        circleRb.refresh();
-        squareRb.refresh();
+        circle.refresh();
 
-        square = moveMesh(square, squareRb.velocity);
-        circle = moveMesh(circle, circleRb.velocity);
         
-        circleCol.position = circle.position;
-        squareCol.position = square.position;
         
         int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
         glUseProgram(shaderProgram);
         glUniform4f(vertexColorLocation, 0.8f, 0.f, 0.5f, 0.5f);
         
-        renderMesh(square);
         
         glUseProgram(shaderProgram);
         glUniform4f(vertexColorLocation, 0.5f, 0.f, 0.8f, 0.5f);
 
-        renderMesh(circle);
+        renderMesh(*circle.mesh);
 
         glfwSwapBuffers(window);
     }
-    glDeleteVertexArrays(1, &square.vertex.array);
-    glDeleteBuffers(1, &square.vertex.buffer);
-    glDeleteBuffers(1, &square.vertex.index);
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
     
-    square.freeArrays();
-    circle.freeArrays();
 
     glfwTerminate();
     return 0;

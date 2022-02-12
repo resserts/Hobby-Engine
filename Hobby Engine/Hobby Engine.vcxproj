@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="circle.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="rb-collider.h" />
     <ClInclude Include="shaders.h" />
