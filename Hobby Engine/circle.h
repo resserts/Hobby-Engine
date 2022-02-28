@@ -61,10 +61,10 @@ void circlesCollision(rigidBody *obj1, rigidBody *obj2) {
 }
 
 void circleInBoxCol(circleCollider circleCol, rigidBody* circleRb) {
-	if (abs(circleCol.position.x) + circleCol.radius >= 1.0f) {
+	if (abs(circleCol.position.x) + circleCol.radius >= 1.0f && circleCol.position.x * circleRb->velocity.x > 0) {
 		circleRb->velocity.x *= -1.0f;
 	}
-	if (abs(circleCol.position.y) + circleCol.radius >= 1.0f) {
+	if (abs(circleCol.position.y) + circleCol.radius >= 1.0f && circleCol.position.y * circleRb->velocity.y > 0) {
 		circleRb->velocity.y *= -1.0f;
 	}
 }
@@ -119,12 +119,12 @@ public:
 	circleCollider* collider;
 	mesh* mesh;
 	rigidBody* rb;
-	circle(vector position, float radius, int res = 36, vector velocity = vector(0,0)) {
+	circle(float radius = 1, vector position = vector(0, 0), int res = 36, vector velocity = vector(0, 0)) {
 		collider = new circleCollider(position, radius);
 		mesh = CircleMesh(res, radius);
 		rb = new rigidBody(position, velocity);
 		
-		moveMesh(*mesh, position);
+		moveMesh(mesh, position);
 	}
 	~circle() {
 		mesh->freeArrays();
@@ -134,8 +134,10 @@ public:
 	}
 
 	void refresh() {
+
 		rb->refresh();
-		moveMesh(*mesh, rb->velocity);
+		vector meshMove = vector(rb->position.x - mesh->position.x + rb->velocity.x, rb->position.y - mesh->position.y + rb->velocity.y);
+		moveMesh(mesh, meshMove);
 		collider->position = rb->position;
 	}
 };

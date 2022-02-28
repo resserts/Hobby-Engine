@@ -66,15 +66,13 @@ void bindIndexMesh(mesh mesh) {
 	
 }
 
-auto moveMesh(mesh mesh, vector move) {
-	printf("%d\n", mesh.verticesSize);
-    for (int i = 0; i < mesh.verticesSize / 2; i++) {
-		mesh.vertices[i * 2] += move.x;
-		mesh.vertices[i * 2 + 1] += move.y;
+void moveMesh(mesh* mesh, vector move) {
+    for (int i = 0; i < mesh->verticesSize / 2; i++) {
+		mesh->vertices[i * 2] += move.x;
+		mesh->vertices[i * 2 + 1] += move.y;
 	}
-	mesh.position.x += move.x;
-	mesh.position.y += move.y;
-	return mesh;
+	mesh->position.x += move.x;
+	mesh->position.y += move.y;
 }
 
 void renderMesh(mesh mesh) {

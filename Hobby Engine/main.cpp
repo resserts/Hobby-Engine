@@ -56,8 +56,13 @@ int main()
     glUseProgram(shaderProgram);
 
 
-    circle circle(vector(0.7f, 0.5f), 1, 36, vector(-0.01f, 0.01f));
+    circle circle[10];
 
+    for (int i = 0; i < 10; i++) {
+        circle[i].rb->position = vector(((i % 5) / 2.5f) - 0.8f, (floor(i / 5.0f) - 0.5f));
+        circle[i].rb->velocity = vector(rand() % 100 / 10000.0f, rand() % 100 / 10000.0f);
+        circle[i].refresh();
+    }
          
     while (!glfwWindowShouldClose(window))
     {
@@ -66,30 +71,8 @@ int main()
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /*float forceX = 0;
-        int stateD = glfwGetKey(window, GLFW_KEY_D);
-        if (stateD == GLFW_PRESS)
-        {
-            forceX = 0.005f;
-        }
-        int stateA = glfwGetKey(window, GLFW_KEY_A);
-        if (stateA == GLFW_PRESS)
-        {
-            forceX = -0.005f;
-        }
-
-        float forceY = 0;
-        float gravity = -0.01f;
-        int stateW = glfwGetKey(window, GLFW_KEY_W);
-        if (stateW == GLFW_PRESS)
-        {
-            forceY = 0.05f;
-        }
         
-        rb.velocity.x = forceX;
-        rb.velocity.y = forceY;*/
-
-        circleInBoxCol(*circle.collider, circle.rb);
+        //circleInBoxCol(*circle.collider, circle.rb);
         /*
         if (circlesColliding(*circle.collider, squareCol)) {
             
@@ -97,21 +80,27 @@ int main()
             circlesCollision(circle.rb, &squareRb);
             //printf("%f", circleRb.velocity.x);
         }*/
-        
-        circle.refresh();
+        for (int i = 0; i < 10; i++) {
+			circleInBoxCol(*circle[i].collider, circle[i].rb);
+            for (int j = 0; j < 10; j++) {
+                if (i != j && circlesColliding(*circle[i].collider, *circle[j].collider)) {
+                    circlesCollision(circle[i].rb, circle[j].rb);
+                    //circle[j].refresh();
+                    //circle[i].refresh();
+                }
+            }
 
-        
-        
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        glUseProgram(shaderProgram);
-        glUniform4f(vertexColorLocation, 0.8f, 0.f, 0.5f, 0.5f);
-        
-        
-        glUseProgram(shaderProgram);
-        glUniform4f(vertexColorLocation, 0.5f, 0.f, 0.8f, 0.5f);
 
-        renderMesh(*circle.mesh);
+            //circle[i].refresh();
+        }
+        for (int i = 0; i < 10; i++){
+            circle[i].refresh();
+            int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+            glUseProgram(shaderProgram);
+            glUniform4f(vertexColorLocation, (i + 5.0f) / 20.0f, (i + 0.0f) / 20.0f, (i + 10.0f) / 20.0f, 0.5f);
 
+            renderMesh(*circle[i].mesh);
+        }
         glfwSwapBuffers(window);
     }
 
